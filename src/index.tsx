@@ -84,7 +84,6 @@ const GameBoard = () => {
             onPlay={() => playHouse(gameState.playerB.houses.length - index - 1, 'playerB')}
           />
         ))}
-        {/* <House piecesCount={houseCount} /> */}
         <td rowSpan={2}>{gameState.playerA.storeCount}</td>
       </tr>
       <tr>
@@ -94,12 +93,6 @@ const GameBoard = () => {
             onPlay={() => playHouse(index, 'playerA')}
           />
         ))}
-        {/* <House />
-        <House />
-        <House />
-        <House />
-        <House />
-        <House /> */}
       </tr>
     </table>
   );
