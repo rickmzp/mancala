@@ -30,7 +30,36 @@ const generateInitialGameState = (): GameState =>  ({
 const GameBoard = () => {
   const [gameState, setGameState] = useState(generateInitialGameState());
 
-  const playHouse = (index: number) => {
+  const playHouseB = (index: number) => {
+    const currentState = gameState;
+    const updatedSideAHouses = currentState.sideAHouses;
+    const updatedSideBHouses = currentState.sideBHouses;
+    let updatedSideBStoreCount = currentState.sideBStoreCount;
+
+    const stonesCurrentlyInHouse = updatedSideBHouses[index]
+    updatedSideBHouses[index] = 0;
+    for (let i = 1; i <= stonesCurrentlyInHouse; i++) {
+      const houseToIncrement = index + i;
+      if (houseToIncrement == currentState.sideBHouses.length) {
+        updatedSideBStoreCount++;
+      } else if (houseToIncrement > currentState.sideBHouses.length) {
+        const otherSideHouseToIncrement = houseToIncrement - currentState.sideBHouses.length - 1;
+        updatedSideAHouses[otherSideHouseToIncrement] = updatedSideAHouses[otherSideHouseToIncrement] + 1;
+      } else {
+        updatedSideBHouses[houseToIncrement] = updatedSideBHouses[houseToIncrement] + 1;
+      }
+    }
+
+    const newState = {
+      ...currentState,
+      sideAHouses: updatedSideAHouses,
+      sideBHouses: updatedSideBHouses,
+      sideBStoreCount: updatedSideBStoreCount,
+    };
+    setGameState(newState);
+  }
+
+  const playHouseA = (index: number) => {
     const currentState = gameState;
     const updatedSideAHouses = currentState.sideAHouses;
     const updatedSideBHouses = currentState.sideBHouses;
@@ -66,7 +95,7 @@ const GameBoard = () => {
         {gameState.sideBHouses.slice().reverse().map((count, index) => (
           <House
             piecesCount={count}
-            onPlay={() => playHouse(index)}
+            onPlay={() => playHouseB(gameState.sideBHouses.length - index - 1)}
           />
         ))}
         {/* <House piecesCount={houseCount} /> */}
@@ -76,7 +105,7 @@ const GameBoard = () => {
         {gameState.sideAHouses.map((count, index) => (
           <House
             piecesCount={count}
-            onPlay={() => playHouse(index)}
+            onPlay={() => playHouseA(index)}
           />
         ))}
         {/* <House />
