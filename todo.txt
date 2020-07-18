@@ -1,0 +1,9 @@
+# TODO
+
+ [ ] set up testing
+ [ ] set up sourcemaps
+ [ ] assign colors to players in UI
+ [ ] game bug: fix when enough stones in a house to pass two stores (8 or more)
+ [ ] game: player B play
+ [ ] game: capture logic
+ [ ] game: end the game
