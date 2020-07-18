@@ -14,98 +14,84 @@ const House = ({ piecesCount, onPlay }: HouseProps) => (
 )
 
 interface GameState {
-  sideAHouses: Array<number>,
-  sideAStoreCount: number,
-  sideBHouses: Array<number>,
-  sideBStoreCount: number,
+  playerA: {
+    houses: Array<number>,
+    storeCount: number,
+  },
+  playerB: {
+    houses: Array<number>,
+    storeCount: number,
+  },
 }
 
 const generateInitialGameState = (): GameState =>  ({
-  sideAHouses: [4, 4, 4, 4, 4, 4],
-  sideAStoreCount: 0,
-  sideBHouses: [4, 4, 4, 4, 4, 4],
-  sideBStoreCount: 0,
+  playerA: {
+    houses: [4, 4, 4, 4, 4, 4],
+    storeCount: 0,
+  },
+  playerB: {
+    houses: [4, 4, 4, 4, 4, 4],
+    storeCount: 0,
+  },
 });
 
 const GameBoard = () => {
   const [gameState, setGameState] = useState(generateInitialGameState());
 
-  const playHouseB = (index: number) => {
-    const currentState = gameState;
-    const updatedSideAHouses = currentState.sideAHouses;
-    const updatedSideBHouses = currentState.sideBHouses;
-    let updatedSideBStoreCount = currentState.sideBStoreCount;
+  const playHouse = (index: number, player: keyof GameState) => {
+    const opposingPlayer = player == 'playerA' ? 'playerB' : 'playerA'
+    const currentPlayerState = gameState[player];
+    const opponentPlayerState = gameState[opposingPlayer];
+    const updatedCurrentPlayerHouses = currentPlayerState.houses;
+    const updatedOpponentPlayerHouses = opponentPlayerState.houses;
+    let currentPlayerStoreCount = currentPlayerState.storeCount;
+    let opponentPlayerStoreCount = opponentPlayerState.storeCount;
 
-    const stonesCurrentlyInHouse = updatedSideBHouses[index]
-    updatedSideBHouses[index] = 0;
+    const stonesCurrentlyInHouse = updatedCurrentPlayerHouses[index]
+    updatedCurrentPlayerHouses[index] = 0;
     for (let i = 1; i <= stonesCurrentlyInHouse; i++) {
       const houseToIncrement = index + i;
-      if (houseToIncrement == currentState.sideBHouses.length) {
-        updatedSideBStoreCount++;
-      } else if (houseToIncrement > currentState.sideBHouses.length) {
-        const otherSideHouseToIncrement = houseToIncrement - currentState.sideBHouses.length - 1;
-        updatedSideAHouses[otherSideHouseToIncrement] = updatedSideAHouses[otherSideHouseToIncrement] + 1;
+      if (houseToIncrement == updatedCurrentPlayerHouses.length) {
+        currentPlayerStoreCount++;
+      } else if (houseToIncrement > updatedCurrentPlayerHouses.length) {
+        const otherSideHouseToIncrement = houseToIncrement - updatedCurrentPlayerHouses.length - 1;
+        updatedOpponentPlayerHouses[otherSideHouseToIncrement] = updatedOpponentPlayerHouses[otherSideHouseToIncrement] + 1;
       } else {
-        updatedSideBHouses[houseToIncrement] = updatedSideBHouses[houseToIncrement] + 1;
+        updatedCurrentPlayerHouses[houseToIncrement] = updatedCurrentPlayerHouses[houseToIncrement] + 1;
       }
     }
 
-    const newState = {
-      ...currentState,
-      sideAHouses: updatedSideAHouses,
-      sideBHouses: updatedSideBHouses,
-      sideBStoreCount: updatedSideBStoreCount,
-    };
-    setGameState(newState);
-  }
-
-  const playHouseA = (index: number) => {
-    const currentState = gameState;
-    const updatedSideAHouses = currentState.sideAHouses;
-    const updatedSideBHouses = currentState.sideBHouses;
-    let updatedSideAStoreCount = currentState.sideAStoreCount;
-
-    const stonesCurrentlyInHouse = updatedSideAHouses[index]
-    updatedSideAHouses[index] = 0;
-    for (let i = 1; i <= stonesCurrentlyInHouse; i++) {
-      const houseToIncrement = index + i;
-      if (houseToIncrement == currentState.sideAHouses.length) {
-        updatedSideAStoreCount++;
-      } else if (houseToIncrement > currentState.sideAHouses.length) {
-        const otherSideHouseToIncrement = houseToIncrement - currentState.sideAHouses.length - 1;
-        updatedSideBHouses[otherSideHouseToIncrement] = updatedSideBHouses[otherSideHouseToIncrement] + 1;
-      } else {
-        updatedSideAHouses[houseToIncrement] = updatedSideAHouses[houseToIncrement] + 1;
-      }
+    const newState = generateInitialGameState();
+    newState[player] = {
+      houses: updatedCurrentPlayerHouses,
+      storeCount: currentPlayerStoreCount,
+    }
+    newState[opposingPlayer] = {
+      houses: updatedOpponentPlayerHouses,
+      storeCount: opponentPlayerStoreCount,
     }
 
-    const newState = {
-      ...currentState,
-      sideAHouses: updatedSideAHouses,
-      sideBHouses: updatedSideBHouses,
-      sideAStoreCount: updatedSideAStoreCount,
-    };
     setGameState(newState);
   }
 
   return (
     <table style={{ border: "3px solid black" }}>
       <tr>
-        <td rowSpan={2}>{gameState.sideBStoreCount}</td>
-        {gameState.sideBHouses.slice().reverse().map((count, index) => (
+        <td rowSpan={2}>{gameState.playerB.storeCount}</td>
+        {gameState.playerB.houses.slice().reverse().map((count, index) => (
           <House
             piecesCount={count}
-            onPlay={() => playHouseB(gameState.sideBHouses.length - index - 1)}
+            onPlay={() => playHouse(gameState.playerB.houses.length - index - 1, 'playerB')}
           />
         ))}
         {/* <House piecesCount={houseCount} /> */}
-        <td rowSpan={2}>{gameState.sideAStoreCount}</td>
+        <td rowSpan={2}>{gameState.playerA.storeCount}</td>
       </tr>
       <tr>
-        {gameState.sideAHouses.map((count, index) => (
+        {gameState.playerA.houses.map((count, index) => (
           <House
             piecesCount={count}
-            onPlay={() => playHouseA(index)}
+            onPlay={() => playHouse(index, 'playerA')}
           />
         ))}
         {/* <House />
