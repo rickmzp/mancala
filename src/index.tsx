@@ -45,6 +45,7 @@ const GameBoard = () => {
     const opponentPlayerState = gameState[opposingPlayer];
     const updatedCurrentPlayerHouses = currentPlayerState.houses;
     const updatedOpponentPlayerHouses = opponentPlayerState.houses;
+    const totalDistributableBuckets = updatedCurrentPlayerHouses.length + updatedOpponentPlayerHouses.length + 1;
     let currentPlayerStoreCount = currentPlayerState.storeCount;
     let opponentPlayerStoreCount = opponentPlayerState.storeCount;
 
@@ -54,8 +55,8 @@ const GameBoard = () => {
       const houseToIncrement = index + i;
       if (houseToIncrement == updatedCurrentPlayerHouses.length) {
         currentPlayerStoreCount++;
-      } else if (houseToIncrement > updatedCurrentPlayerHouses.length + updatedOpponentPlayerHouses.length) {
-        const mySideHouseToIncrement = houseToIncrement - updatedCurrentPlayerHouses.length - updatedOpponentPlayerHouses.length - 1;
+      } else if (houseToIncrement >= totalDistributableBuckets) {
+        const mySideHouseToIncrement = houseToIncrement - totalDistributableBuckets;
         updatedCurrentPlayerHouses[mySideHouseToIncrement]++;
       } else if (houseToIncrement > updatedCurrentPlayerHouses.length) {
         const otherSideHouseToIncrement = houseToIncrement - updatedCurrentPlayerHouses.length - 1;
