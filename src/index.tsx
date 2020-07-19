@@ -3,12 +3,13 @@ import { render } from "react-dom";
 
 type HouseProps = {
   piecesCount: number,
+  className?: string,
   onPlay?: Function,
 }
 
-const House = ({ piecesCount, onPlay }: HouseProps) => (
-  <td>
-    <p>{piecesCount}</p>
+const House = ({ piecesCount, onPlay, className }: HouseProps) => (
+  <td className={className}>
+    <p className="count">{piecesCount}</p>
     <p><button onClick={(_event) => onPlay()}>Play</button></p>
   </td>
 )
@@ -77,11 +78,12 @@ const GameBoard = () => {
   return (
     <table style={{ border: "3px solid black" }}>
       <tr>
-        <td rowSpan={2}>{gameState.playerB.storeCount}</td>
+        <td className="playerB-store" rowSpan={2}>{gameState.playerB.storeCount}</td>
         {gameState.playerB.houses.slice().reverse().map((count, index) => (
           <House
             piecesCount={count}
             onPlay={() => playHouse(gameState.playerB.houses.length - index - 1, 'playerB')}
+            className={`playerB-house${gameState.playerB.houses.length - index}`}
           />
         ))}
         <td rowSpan={2}>{gameState.playerA.storeCount}</td>
@@ -91,6 +93,7 @@ const GameBoard = () => {
           <House
             piecesCount={count}
             onPlay={() => playHouse(index, 'playerA')}
+            className={`playerA-house${index + 1}`}
           />
         ))}
       </tr>
