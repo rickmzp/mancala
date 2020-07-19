@@ -8,3 +8,4 @@
  [ ] game: turn management
  [ ] game: end the game
  [ ] game: capture logic
+ [ ] chore: ensure correct dev/non-dev dependencies
