@@ -3,29 +3,31 @@ import { render } from "react-dom";
 
 type HouseProps = {
   piecesCount: number,
+  showPlayButton: boolean,
   className?: string,
   onPlay?: Function,
 }
 
-const House = ({ piecesCount, onPlay, className }: HouseProps) => (
-  <td className={className}>
+const House = ({ piecesCount, onPlay, className, showPlayButton }: HouseProps) => (
+  <td className={`${className} house`}>
     <p className="count">{piecesCount}</p>
-    <p><button onClick={(_event) => onPlay()}>Play</button></p>
+    <p>{showPlayButton && <button onClick={(_event) => onPlay()}>Play</button>}</p>
   </td>
 )
 
+interface PlayerGameState {
+  houses: Array<number>;
+  storeCount: number;
+}
+
 interface GameState {
-  playerA: {
-    houses: Array<number>,
-    storeCount: number,
-  },
-  playerB: {
-    houses: Array<number>,
-    storeCount: number,
-  },
+  currentTurn: string;
+  playerA: PlayerGameState;
+  playerB: PlayerGameState;
 }
 
 const generateInitialGameState = (): GameState =>  ({
+  currentTurn: 'playerA',
   playerA: {
     houses: [4, 4, 4, 4, 4, 4],
     storeCount: 0,
@@ -39,7 +41,7 @@ const generateInitialGameState = (): GameState =>  ({
 const GameBoard = () => {
   const [gameState, setGameState] = useState(generateInitialGameState());
 
-  const playHouse = (index: number, player: keyof GameState) => {
+  const playHouse = (index: number, player: 'playerA' | 'playerB') => {
     const opposingPlayer = player == 'playerA' ? 'playerB' : 'playerA'
     const currentPlayerState = gameState[player];
     const opponentPlayerState = gameState[opposingPlayer];
@@ -67,6 +69,7 @@ const GameBoard = () => {
     }
 
     const newState = generateInitialGameState();
+    newState.currentTurn = opposingPlayer;
     newState[player] = {
       houses: updatedCurrentPlayerHouses,
       storeCount: currentPlayerStoreCount,
@@ -86,6 +89,7 @@ const GameBoard = () => {
         {gameState.playerB.houses.slice().reverse().map((count, index) => (
           <House
             piecesCount={count}
+            showPlayButton={gameState.currentTurn == 'playerB'}
             onPlay={() => playHouse(gameState.playerB.houses.length - index - 1, 'playerB')}
             className={`playerB-house${gameState.playerB.houses.length - index}`}
           />
@@ -96,6 +100,7 @@ const GameBoard = () => {
         {gameState.playerA.houses.map((count, index) => (
           <House
             piecesCount={count}
+            showPlayButton={gameState.currentTurn == 'playerA'}
             onPlay={() => playHouse(index, 'playerA')}
             className={`playerA-house${index + 1}`}
           />
