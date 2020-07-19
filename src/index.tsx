@@ -56,12 +56,12 @@ const GameBoard = () => {
         currentPlayerStoreCount++;
       } else if (houseToIncrement > updatedCurrentPlayerHouses.length + updatedOpponentPlayerHouses.length) {
         const mySideHouseToIncrement = houseToIncrement - updatedCurrentPlayerHouses.length - updatedOpponentPlayerHouses.length - 1;
-        updatedCurrentPlayerHouses[mySideHouseToIncrement] = updatedCurrentPlayerHouses[mySideHouseToIncrement] + 1;
+        updatedCurrentPlayerHouses[mySideHouseToIncrement]++;
       } else if (houseToIncrement > updatedCurrentPlayerHouses.length) {
         const otherSideHouseToIncrement = houseToIncrement - updatedCurrentPlayerHouses.length - 1;
-        updatedOpponentPlayerHouses[otherSideHouseToIncrement] = updatedOpponentPlayerHouses[otherSideHouseToIncrement] + 1;
+        updatedOpponentPlayerHouses[otherSideHouseToIncrement]++;
       } else {
-        updatedCurrentPlayerHouses[houseToIncrement] = updatedCurrentPlayerHouses[houseToIncrement] + 1;
+        updatedCurrentPlayerHouses[houseToIncrement]++;
       }
     }
 
