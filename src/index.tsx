@@ -86,7 +86,7 @@ const GameBoard = () => {
             className={`playerB-house${gameState.playerB.houses.length - index}`}
           />
         ))}
-        <td rowSpan={2}>{gameState.playerA.storeCount}</td>
+        <td className="playerA-store" rowSpan={2}>{gameState.playerA.storeCount}</td>
       </tr>
       <tr>
         {gameState.playerA.houses.map((count, index) => (
