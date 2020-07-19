@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "./dist/",
+    "sourceMap": true,
     "esModuleInterop": true, // TODO: better understand
     "noImplicitAny": true,
     "module": "es6",
