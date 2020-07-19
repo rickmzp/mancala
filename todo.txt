@@ -4,6 +4,7 @@
  [ ] set up sourcemaps
  [ ] assign colors to players in UI
  [ ] game bug: fix when enough stones in a house to pass two stores (8 or more)
- [ ] game: player B play
- [ ] game: capture logic
+ [x] game: player B play
+ [ ] game: turn management
  [ ] game: end the game
+ [ ] game: capture logic
