@@ -76,7 +76,7 @@ const GameBoard = () => {
   }
 
   return (
-    <table style={{ border: "3px solid black" }}>
+    <table>
       <tr>
         <td className="playerB-store" rowSpan={2}>{gameState.playerB.storeCount}</td>
         {gameState.playerB.houses.slice().reverse().map((count, index) => (
