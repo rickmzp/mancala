@@ -112,4 +112,21 @@ describe('ending the game', () => {
 
     cy.get('[data-test-id=playButton]').should('have.length', 0)
   });
+
+  // TODO: push this test down into unit tests
+  it('allows game to end in a tie', () => {
+    cy.visit('./dist/index.html')
+
+    cy.contains('Set game state to Player A about to tie').click();
+
+    cy.get('#game-message').should('be.empty')
+
+    cy.get('.playerA-house6 button').click();
+
+    cy.get('#game-message').should('contain.text', 'Game is a tie!')
+    cy.get('.playerA-store').should('have.text', '24')
+    cy.get('.playerB-store').should('have.text', '24')
+
+    cy.get('[data-test-id=playButton]').should('have.length', 0)
+  });
 });

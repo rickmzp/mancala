@@ -66,6 +66,7 @@ const App = () => {
     <p id="game-message">
       {gameState.winner == 'playerA' ? 'Player A wins!' : null}
       {gameState.winner == 'playerB' ? 'Player B wins!' : null}
+      {gameState.winner == 'tie' ? 'Game is a tie!' : null}
     </p>
     <div>
       <h3>Game state overrides</h3>
@@ -109,6 +110,26 @@ const App = () => {
           })
         }>
         Set game state to Player B about to win
+      </button>
+      <button
+        onClick={
+          () => dispatch({
+            type: 'OVERRIDE_GAME_STATE',
+            newState: {
+              currentTurn: 'playerA',
+              playerB: {
+                houses: [0, 0, 0, 0, 0, 1],
+                storeCount: 23,
+              },
+              playerA: {
+                houses: [0, 0, 0, 0, 0, 1],
+                storeCount: 23,
+              },
+              winner: null
+            }
+          })
+        }>
+        Set game state to Player A about to tie
       </button>
     </div>
   </>;
