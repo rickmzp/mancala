@@ -26,28 +26,6 @@ describe('playing stones', () => {
 
     currentTurnShouldBeForPlayer('playerA');
   })
-
-  // TODO: can we push this down into unit tests?
-  it("distributes the stones when passing the opposite player's store", () => {
-    cy.visit('./dist/index.html')
-
-    play({ player: 'A', houseNum: 1 });
-    play({ player: 'B', houseNum: 1 });
-    play({ player: 'A', houseNum: 2 });
-    play({ player: 'A', houseNum: 3 });
-    play({ player: 'B', houseNum: 2 });
-    play({ player: 'A', houseNum: 4 });
-    play({ player: 'B', houseNum: 3 });
-    play({ player: 'A', houseNum: 5 });
-    play({ player: 'B', houseNum: 6 });
-    play({ player: 'A', houseNum: 6 }); // play a house with >= 8 stones
-
-    boardStateShouldBe({
-      B: { houses: [1, 9, 10, 2, 3, 4], store: 3 },
-      A: { houses: [4, 3, 2, 1, 1, 0], store: 5 },
-    });
-  });
-
 });
 
 describe('ending the game', () => {

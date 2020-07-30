@@ -1,6 +1,25 @@
 // TODO: can we move this file out of the integration folder?
 import reducer, { generateInitialGameState } from '../../../src/reducer';
 
+it("distributes the stones when passing the opposite player's store", () => {
+  const initialState = generateInitialGameState();
+  initialState.playerB.storeCount = 3;
+  initialState.playerB.houses = [3, 2, 1, 9, 8, 0];
+  initialState.playerA.storeCount = 4;
+  initialState.playerA.houses = [3, 2, 2, 1, 1, 9];
+
+  const newState = reducer(initialState, {
+    type: 'PLAY_HOUSE',
+    player: 'playerA',
+    houseIndex: 5
+  });
+
+  expect(newState.playerB.houses).to.deep.equal([4, 3, 2, 10, 9, 1]);
+  expect(newState.playerA.houses).to.deep.equal([4, 3, 2, 1, 1, 0]);
+  expect(newState.playerA.storeCount).to.equal(5);
+  expect(newState.playerB.storeCount).to.equal(3);
+});
+
 it('handles large numbers of stones in a house', () => {
   const initialState = generateInitialGameState();
   initialState.playerB.houses = [0, 0, 0, 0, 0, 0];
