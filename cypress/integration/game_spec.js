@@ -31,7 +31,6 @@ describe('playing stones', () => {
   it("distributes the stones when passing the opposite player's store", () => {
     cy.visit('./dist/index.html')
 
-    // TODO: is there a better matcher than contains?
     play({ player: 'A', houseNum: 1 });
     play({ player: 'B', houseNum: 1 });
     play({ player: 'A', houseNum: 2 });
