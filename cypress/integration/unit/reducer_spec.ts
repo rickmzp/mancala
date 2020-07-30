@@ -199,4 +199,6 @@ describe('state validation', () => {
       })
     }).to.throw('invalid number of pieces in game state');
   })
+
+  // TODO: do not allow playing of houses with 0 stones
 })

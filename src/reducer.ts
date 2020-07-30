@@ -10,7 +10,7 @@ export interface GameState {
   winner?: string;
 }
 
-type Player = 'playerA' | 'playerB';
+export type Player = 'playerA' | 'playerB';
 type HouseIndex = 0 | 1 | 2 | 3 | 4 | 5;
 
 

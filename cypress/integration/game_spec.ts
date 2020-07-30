@@ -1,3 +1,12 @@
+import { Player } from '../../src/reducer';
+
+type PlayerShorthand = 'A' | 'B';
+type HouseNumber = 1 | 2 | 3 | 4 | 5 | 6;
+type House = {
+  player: PlayerShorthand,
+  houseNum: HouseNumber
+};
+
 describe('playing stones', () => {
   it('distributes the stones counter-clockwise', () => {
     cy.visit('./dist/index.html')
@@ -25,6 +34,7 @@ describe('playing stones', () => {
     });
 
     currentTurnShouldBeForPlayer('playerA');
+    ensureNoPlayButtonFor({ player: 'A', houseNum: 3 });
   })
 });
 
@@ -83,8 +93,14 @@ function boardStateShouldBe({ A, B }: ExpectedPlayersState) {
   });
 };
 
-function currentTurnShouldBeForPlayer(player: 'playerA' | 'playerB') {
+function currentTurnShouldBeForPlayer(player: Player) {
   const opposingPlayer = player === 'playerA' ? 'playerB' : player;
-  cy.get(`.${player}-house [data-test-id=playButton]`).should('have.length', 6);
+  cy.get(`.${player}-house [data-test-id=playButton]`).should('have.length.of.at.least', 1);
   cy.get(`.${opposingPlayer}-house [data-test-id=playButton]`).should('have.length', 0);
+}
+
+function ensureNoPlayButtonFor({ player, houseNum }: House) {
+  cy.get(
+    `.player${player}-house${houseNum} [data-test-id=playButton]`
+  ).should('have.length', 0);
 }

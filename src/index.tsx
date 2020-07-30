@@ -13,7 +13,11 @@ type HouseProps = {
 const House = ({ piecesCount, onPlay, className, showPlayButton }: HouseProps) => (
   <td className={`${className} house`}>
     <p className="count">{piecesCount}</p>
-    <p>{showPlayButton && <button data-test-id='playButton' onClick={(_event) => onPlay()}>Play</button>}</p>
+    <p>
+      {showPlayButton && piecesCount > 0 && (
+        <button data-test-id='playButton' onClick={(_event) => onPlay()}>Play</button>
+      )}
+    </p>
   </td>
 )
 
