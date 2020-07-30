@@ -96,6 +96,7 @@ describe('ending the game', () => {
     cy.get('[data-test-id=playButton]').should('have.length', 0)
   });
 
+  // TODO: push this test down into unit tests
   it('allows player A to win', () => {
     cy.visit('./dist/index.html')
 
