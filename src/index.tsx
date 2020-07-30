@@ -1,6 +1,6 @@
 import React, { useReducer } from "react";
 import { render } from "react-dom";
-import { reducer, generateInitialGameState } from "./reducer";
+import { reducer, generateInitialGameState, GameState } from "./reducer";
 
 type HouseProps = {
   piecesCount: number,
@@ -16,9 +16,12 @@ const House = ({ piecesCount, onPlay, className, showPlayButton }: HouseProps) =
   </td>
 )
 
-const GameBoard = () => {
-  const [gameState, dispatch] = useReducer(reducer, generateInitialGameState());
+type GameBoardProps = {
+  gameState: GameState,
+  dispatch: Function,
+}
 
+const GameBoard = ({ gameState, dispatch }: GameBoardProps) => {
   return (
     <table>
       <tr>
@@ -55,7 +58,62 @@ const GameBoard = () => {
   );
 };
 
+const App = () => {
+  const [gameState, dispatch] = useReducer(reducer, generateInitialGameState());
+
+  return <>
+    <GameBoard gameState={gameState} dispatch={dispatch} />
+    <p id="game-message">
+      {gameState.winner == 'playerA' ? 'Player A wins!' : null}
+      {gameState.winner == 'playerB' ? 'Player B wins!' : null}
+    </p>
+    <div>
+      <h3>Game state overrides</h3>
+      <button
+        onClick={
+          () => dispatch({
+            type: 'OVERRIDE_GAME_STATE',
+            newState: {
+              currentTurn: 'playerA',
+              playerB: {
+                houses: [0, 0, 0, 0, 0, 1],
+                storeCount: 22,
+              },
+              playerA: {
+                houses: [0, 0, 0, 0, 0, 1],
+                storeCount: 24,
+              },
+              winner: null
+            }
+          })
+        }>
+        Set game state to Player A about to win
+      </button>
+      <button
+        onClick={
+          () => dispatch({
+            type: 'OVERRIDE_GAME_STATE',
+            newState: {
+              currentTurn: 'playerB',
+              playerB: {
+                houses: [0, 0, 0, 0, 0, 1],
+                storeCount: 24,
+              },
+              playerA: {
+                houses: [0, 0, 0, 0, 0, 1],
+                storeCount: 22,
+              },
+              winner: null
+            }
+          })
+        }>
+        Set game state to Player B about to win
+      </button>
+    </div>
+  </>;
+}
+
 render(
-  <GameBoard />,
+  <App />,
   document.getElementById("react-root")
 );

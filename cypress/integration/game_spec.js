@@ -78,3 +78,35 @@ describe('playing stones', () => {
     });
   };
 });
+
+describe('ending the game', () => {
+  it('allows player B to win', () => {
+    cy.visit('./dist/index.html')
+
+    cy.contains('Set game state to Player B about to win').click();
+
+    cy.get('#game-message').should('be.empty')
+
+    cy.get('.playerB-house6 button').click();
+
+    cy.get('#game-message').should('have.text', 'Player B wins!')
+    cy.get('.playerB-store').should('have.text', '25')
+    cy.get('.playerA-store').should('have.text', '23')
+
+    // TODO: test that play buttons no longer render after game is over
+  });
+
+  it('allows player A to win', () => {
+    cy.visit('./dist/index.html')
+
+    cy.contains('Set game state to Player A about to win').click();
+
+    cy.get('#game-message').should('be.empty')
+
+    cy.get('.playerA-house6 button').click();
+
+    cy.get('body').should('contain.text', 'Player A wins!')
+    cy.get('.playerA-store').should('have.text', '25')
+    cy.get('.playerB-store').should('have.text', '23')
+  });
+});

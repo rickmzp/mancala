@@ -3,18 +3,28 @@ interface PlayerGameState {
   storeCount: number;
 }
 
-interface GameState {
+export interface GameState {
   currentTurn: string;
   playerA: PlayerGameState;
   playerB: PlayerGameState;
+  winner?: string;
 }
 
 type Player = 'playerA' | 'playerB';
 
 interface GameAction {
+  type: 'PLAY_HOUSE' | 'OVERRIDE_GAME_STATE',
+}
+
+interface PlayHouseAction extends GameAction {
   type: 'PLAY_HOUSE',
   houseIndex: number,
   player: Player
+}
+
+interface OverrideGameStateAction extends GameAction {
+  type: 'OVERRIDE_GAME_STATE',
+  newState: GameState,
 }
 
 export const generateInitialGameState = (): GameState =>  ({
@@ -27,6 +37,7 @@ export const generateInitialGameState = (): GameState =>  ({
     houses: [4, 4, 4, 4, 4, 4],
     storeCount: 0,
   },
+  winner: null,
 });
 
 const playHouse = (state: GameState, index: number, player: Player) => {
@@ -70,11 +81,34 @@ const playHouse = (state: GameState, index: number, player: Player) => {
     storeCount: opponentPlayerStoreCount,
   }
 
+  // current player has run out of stones, end the game
+  if (newState[player].houses.every((count) => count == 0)) {
+    // take all of opposing player's stones and add to their store count
+    newState[opposingPlayer].houses.forEach((houseCount, index) => {
+      newState[opposingPlayer].storeCount += houseCount;
+      newState[opposingPlayer].houses[index] = 0;
+    });
+
+    if (newState[player].storeCount > newState[opposingPlayer].storeCount) {
+      newState.winner = player;
+    } else if (newState[player].storeCount < newState[opposingPlayer].storeCount) {
+      newState.winner = opposingPlayer;
+    } else {
+      newState.winner = 'tie';
+    }
+  }
   return newState;
 }
 
-export const reducer = (state: GameState, action: GameAction): GameState => {
-  return playHouse(state, action.houseIndex, action.player);
+// TODO: rethink how to set the type for action
+export const reducer = (state: GameState, action: PlayHouseAction | OverrideGameStateAction): GameState => {
+  // TODO: validate that we always have the right number of stones in play
+  switch (action.type) {
+    case 'PLAY_HOUSE':
+      return playHouse(state, action.houseIndex, action.player);
+    case 'OVERRIDE_GAME_STATE':
+      return action.newState;
+  }
 }
 
 export default reducer;
