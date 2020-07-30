@@ -96,6 +96,8 @@ const playHouse = (state: GameState, index: number, player: Player) => {
     } else {
       newState.winner = 'tie';
     }
+
+    newState.currentTurn = null;
   }
   return newState;
 }

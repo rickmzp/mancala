@@ -87,13 +87,13 @@ describe('ending the game', () => {
 
     cy.get('#game-message').should('be.empty')
 
-    cy.get('.playerB-house6 button').click();
+    cy.get('.playerB-house6 [data-test-id=playButton]').click();
 
     cy.get('#game-message').should('have.text', 'Player B wins!')
     cy.get('.playerB-store').should('have.text', '25')
     cy.get('.playerA-store').should('have.text', '23')
 
-    // TODO: test that play buttons no longer render after game is over
+    cy.get('[data-test-id=playButton]').should('have.length', 0)
   });
 
   it('allows player A to win', () => {
@@ -108,5 +108,7 @@ describe('ending the game', () => {
     cy.get('body').should('contain.text', 'Player A wins!')
     cy.get('.playerA-store').should('have.text', '25')
     cy.get('.playerB-store').should('have.text', '23')
+
+    cy.get('[data-test-id=playButton]').should('have.length', 0)
   });
 });
