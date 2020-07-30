@@ -106,7 +106,7 @@ describe('ending the game', () => {
 
     cy.get('.playerA-house6 button').click();
 
-    cy.get('body').should('contain.text', 'Player A wins!')
+    cy.get('#game-message').should('contain.text', 'Player A wins!')
     cy.get('.playerA-store').should('have.text', '25')
     cy.get('.playerB-store').should('have.text', '23')
 
