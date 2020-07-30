@@ -42,7 +42,10 @@ const playHouse = (state: GameState, index: number, player: Player) => {
   const stonesCurrentlyInHouse = updatedCurrentPlayerHouses[index]
   updatedCurrentPlayerHouses[index] = 0;
   for (let i = 1; i <= stonesCurrentlyInHouse; i++) {
-    const houseToIncrement = index + i;
+    let houseToIncrement = index + i;
+    if (houseToIncrement >= totalDistributableBuckets)
+      houseToIncrement = houseToIncrement - totalDistributableBuckets;
+
     if (houseToIncrement == updatedCurrentPlayerHouses.length) {
       currentPlayerStoreCount++;
     } else if (houseToIncrement >= totalDistributableBuckets) {
@@ -73,3 +76,5 @@ const playHouse = (state: GameState, index: number, player: Player) => {
 export const reducer = (state: GameState, action: GameAction): GameState => {
   return playHouse(state, action.houseIndex, action.player);
 }
+
+export default reducer;
