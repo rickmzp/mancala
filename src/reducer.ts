@@ -11,6 +11,7 @@ export interface GameState {
 }
 
 type Player = 'playerA' | 'playerB';
+type HouseIndex = 0 | 1 | 2 | 3 | 4 | 5;
 
 interface GameAction {
   type: 'PLAY_HOUSE' | 'OVERRIDE_GAME_STATE',
@@ -18,7 +19,7 @@ interface GameAction {
 
 interface PlayHouseAction extends GameAction {
   type: 'PLAY_HOUSE',
-  houseIndex: number,
+  houseIndex: HouseIndex,
   player: Player
 }
 
@@ -40,7 +41,7 @@ export const generateInitialGameState = (): GameState =>  ({
   winner: null,
 });
 
-const playHouse = (state: GameState, index: number, player: Player) => {
+const playHouse = (state: GameState, index: HouseIndex, player: Player) => {
   const opposingPlayer = player == 'playerA' ? 'playerB' : 'playerA'
   const currentPlayerState = state[player];
   const opponentPlayerState = state[opposingPlayer];
