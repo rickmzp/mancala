@@ -59,6 +59,7 @@ describe('playing stones', () => {
     cy.get('.playerB-store').should('contain', '0');
   });
 
+  // TODO: can we push this down into unit tests?
   it("distributes the stones when passing the opposite player's store", () => {
     cy.visit('./dist/index.html')
 
