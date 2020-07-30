@@ -37,6 +37,40 @@ it('handles large numbers of stones in a house', () => {
   expect(newState.playerB.storeCount).to.equal(0);
 });
 
+it("allows capturing of opposing player's stones", () => {
+  const initialState = generateInitialGameState();
+  initialState.playerB.houses = [1, 0, 0, 0, 0, 0];
+  initialState.playerA.houses = [0, 0, 0, 0, 1, 0];
+
+  const newState = reducer(initialState, {
+    type: 'PLAY_HOUSE',
+    player: 'playerA',
+    houseIndex: 4
+  });
+
+  expect(newState.playerB.houses).to.deep.equal([0, 0, 0, 0, 0, 0]);
+  expect(newState.playerA.houses).to.deep.equal([0, 0, 0, 0, 0, 0]);
+  expect(newState.playerA.storeCount).to.equal(2);
+  expect(newState.playerB.storeCount).to.equal(0);
+})
+
+it("allows capturing of opposing player's stones after going around the board", () => {
+  const initialState = generateInitialGameState();
+  initialState.playerB.houses = [0, 0, 0, 0, 0, 1];
+  initialState.playerA.houses = [0, 0, 0, 1, 0, 8];
+
+  const newState = reducer(initialState, {
+    type: 'PLAY_HOUSE',
+    player: 'playerA',
+    houseIndex: 5
+  });
+
+  expect(newState.playerB.houses).to.deep.equal([1, 1, 1, 1, 1, 0]);
+  expect(newState.playerA.houses).to.deep.equal([0, 0, 0, 1, 0, 0]);
+  expect(newState.playerA.storeCount).to.equal(4);
+  expect(newState.playerB.storeCount).to.equal(0);
+})
+
 describe('end of game scenarios', () => {
   it('allows player A to win the game', () => {
     const finalState = playLastMoveForPlayer(

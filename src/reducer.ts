@@ -68,7 +68,21 @@ const playHouse = (state: GameState, index: number, player: Player) => {
       const otherSideHouseToIncrement = houseToIncrement - updatedCurrentPlayerHouses.length - 1;
       updatedOpponentPlayerHouses[otherSideHouseToIncrement]++;
     } else {
+      const landedOnEmptyHouse = updatedCurrentPlayerHouses[houseToIncrement] === 0;
       updatedCurrentPlayerHouses[houseToIncrement]++;
+      if (i === stonesCurrentlyInHouse && landedOnEmptyHouse) {
+        // TODO: extract this to some sort of capture function
+        const opposingPlayersOppositeHouse = 5 - houseToIncrement;
+        const opposingPlayersOppositeHouseCount =
+          updatedOpponentPlayerHouses[opposingPlayersOppositeHouse];
+        updatedOpponentPlayerHouses[opposingPlayersOppositeHouse] = 0;
+        const currentPlayersLandingHouseCount =
+          updatedCurrentPlayerHouses[houseToIncrement];
+        updatedCurrentPlayerHouses[houseToIncrement] = 0;
+        currentPlayerStoreCount = currentPlayerStoreCount +
+          opposingPlayersOppositeHouseCount +
+          currentPlayersLandingHouseCount;
+      };
     }
   }
 
