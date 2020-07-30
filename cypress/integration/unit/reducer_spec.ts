@@ -1,5 +1,5 @@
 // TODO: can we move this file out of the integration folder?
-import reducer, { generateInitialGameState } from '../../../src/reducer';
+import reducer, { generateInitialGameState, GameState } from '../../../src/reducer';
 
 it("distributes the stones when passing the opposite player's store", () => {
   const initialState = generateInitialGameState();
@@ -110,8 +110,13 @@ describe('end of game scenarios', () => {
     expect(finalState.winner).to.equal('tie');
   });
 
+  interface EndOfGameStoreCounts {
+    playerAStoreCount: number,
+    playerBStoreCount: number,
+  }
+
   function generateAlmostAtEndOfGameState(
-    { playerAStoreCount, playerBStoreCount }
+    { playerAStoreCount, playerBStoreCount }: EndOfGameStoreCounts
   ) {
     const state = generateInitialGameState();
 
@@ -124,7 +129,10 @@ describe('end of game scenarios', () => {
     return state;
   }
 
-  function playLastMoveForPlayer(player, initialState) {
+  function playLastMoveForPlayer(
+    player: 'playerA' | 'playerB',
+    initialState: GameState,
+  ) {
     return reducer(initialState, {
       type: 'PLAY_HOUSE',
       player,
