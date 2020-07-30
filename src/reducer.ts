@@ -49,6 +49,7 @@ const playHouse = (state: GameState, index: number, player: Player) => {
   const totalDistributableBuckets = updatedCurrentPlayerHouses.length + updatedOpponentPlayerHouses.length + 1;
   let currentPlayerStoreCount = currentPlayerState.storeCount;
   let opponentPlayerStoreCount = opponentPlayerState.storeCount;
+  let repeatTurn = false;
 
   const stonesCurrentlyInHouse = updatedCurrentPlayerHouses[index]
   updatedCurrentPlayerHouses[index] = 0;
@@ -59,6 +60,7 @@ const playHouse = (state: GameState, index: number, player: Player) => {
 
     if (houseToIncrement == updatedCurrentPlayerHouses.length) {
       currentPlayerStoreCount++;
+      if (i === stonesCurrentlyInHouse) repeatTurn = true;
     } else if (houseToIncrement >= totalDistributableBuckets) {
       const mySideHouseToIncrement = houseToIncrement - totalDistributableBuckets;
       updatedCurrentPlayerHouses[mySideHouseToIncrement]++;
@@ -71,7 +73,7 @@ const playHouse = (state: GameState, index: number, player: Player) => {
   }
 
   const newState = generateInitialGameState();
-  newState.currentTurn = opposingPlayer;
+  newState.currentTurn = repeatTurn ? player : opposingPlayer;
   newState[player] = {
     houses: updatedCurrentPlayerHouses,
     storeCount: currentPlayerStoreCount,

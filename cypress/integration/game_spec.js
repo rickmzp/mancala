@@ -18,6 +18,21 @@ describe('playing stones', () => {
     cy.get('.playerA-store').should('contain', '0');
   });
 
+  it('repeats the turn for a player if last stone ends in store', () => {
+    cy.visit('./dist/index.html')
+
+    cy.get('.playerA-house3 button').click();
+    cy.get('.playerA-store').should('contain', '1');
+    cy.get('.playerB-store').should('contain', '0');
+    boardHousesShouldLookLikeThis(
+      [4, 4, 4, 4, 4, 4],
+      [4, 4, 0, 5, 5, 5],
+    );
+
+    cy.get('.playerA-house [data-test-id=playButton]').should('have.length', 6);
+    cy.get('.playerB-house [data-test-id=playButton]').should('have.length', 0);
+  })
+
   it('stores a stone when it reaches the end', () => {
     cy.visit('./dist/index.html')
 
@@ -51,18 +66,19 @@ describe('playing stones', () => {
     cy.get('.playerA-house1 button').click();
     cy.get('.playerB-house1 button').click();
     cy.get('.playerA-house2 button').click();
-    cy.get('.playerB-house2 button').click();
     cy.get('.playerA-house3 button').click();
-    cy.get('.playerB-house3 button').click();
+    cy.get('.playerB-house2 button').click();
     cy.get('.playerA-house4 button').click();
-    cy.get('.playerB-house4 button').click();
+    cy.get('.playerB-house3 button').click();
     cy.get('.playerA-house5 button').click();
+    cy.get('.playerB-house6 button').click();
+    cy.get('.playerA-house6 button').click(); // play a house with >= 8 stones
 
     boardHousesShouldLookLikeThis(
-      [8, 9, 1, 2, 3, 3],
-      [3, 2, 1, 1, 0, 8]
+      [1, 9, 10, 2, 3, 4],
+      [4, 3, 2, 1, 1, 0]
     );
-    cy.get('.playerA-store').should('contain', '4');
+    cy.get('.playerA-store').should('contain', '5');
     cy.get('.playerB-store').should('contain', '3');
   });
 

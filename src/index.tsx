@@ -35,7 +35,7 @@ const GameBoard = ({ gameState, dispatch }: GameBoardProps) => {
               houseIndex: gameState.playerB.houses.length - index - 1,
               player: 'playerB',
             })}
-            className={`playerB-house${gameState.playerB.houses.length - index}`}
+            className={`playerB-house playerB-house${gameState.playerB.houses.length - index}`}
           />
         ))}
         <td className="playerA-store" rowSpan={2}>{gameState.playerA.storeCount}</td>
@@ -50,7 +50,7 @@ const GameBoard = ({ gameState, dispatch }: GameBoardProps) => {
               houseIndex: index,
               player: 'playerA',
             })}
-            className={`playerA-house${index + 1}`}
+            className={`playerA-house playerA-house${index + 1}`}
           />
         ))}
       </tr>
