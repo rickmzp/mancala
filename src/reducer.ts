@@ -62,6 +62,8 @@ const playHouse = (state: GameState, index: HouseIndex, player: Player) => {
       currentPlayerStoreCount++;
       if (i === stonesCurrentlyInHouse) repeatTurn = true;
     } else if (houseToIncrement >= totalDistributableBuckets) {
+      // TODO: figure out how to get rid of this branch which serves almost the
+      //       same purpose as the "else" branch
       const mySideHouseToIncrement = houseToIncrement - totalDistributableBuckets;
       updatedCurrentPlayerHouses[mySideHouseToIncrement]++;
     } else if (houseToIncrement > updatedCurrentPlayerHouses.length) {
