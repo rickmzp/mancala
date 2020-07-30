@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useReducer } from "react";
 import { render } from "react-dom";
+import { reducer, generateInitialGameState } from "./reducer";
 
 type HouseProps = {
   piecesCount: number,
@@ -15,72 +16,8 @@ const House = ({ piecesCount, onPlay, className, showPlayButton }: HouseProps) =
   </td>
 )
 
-interface PlayerGameState {
-  houses: Array<number>;
-  storeCount: number;
-}
-
-interface GameState {
-  currentTurn: string;
-  playerA: PlayerGameState;
-  playerB: PlayerGameState;
-}
-
-const generateInitialGameState = (): GameState =>  ({
-  currentTurn: 'playerA',
-  playerA: {
-    houses: [4, 4, 4, 4, 4, 4],
-    storeCount: 0,
-  },
-  playerB: {
-    houses: [4, 4, 4, 4, 4, 4],
-    storeCount: 0,
-  },
-});
-
 const GameBoard = () => {
-  const [gameState, setGameState] = useState(generateInitialGameState());
-
-  const playHouse = (index: number, player: 'playerA' | 'playerB') => {
-    const opposingPlayer = player == 'playerA' ? 'playerB' : 'playerA'
-    const currentPlayerState = gameState[player];
-    const opponentPlayerState = gameState[opposingPlayer];
-    const updatedCurrentPlayerHouses = currentPlayerState.houses;
-    const updatedOpponentPlayerHouses = opponentPlayerState.houses;
-    const totalDistributableBuckets = updatedCurrentPlayerHouses.length + updatedOpponentPlayerHouses.length + 1;
-    let currentPlayerStoreCount = currentPlayerState.storeCount;
-    let opponentPlayerStoreCount = opponentPlayerState.storeCount;
-
-    const stonesCurrentlyInHouse = updatedCurrentPlayerHouses[index]
-    updatedCurrentPlayerHouses[index] = 0;
-    for (let i = 1; i <= stonesCurrentlyInHouse; i++) {
-      const houseToIncrement = index + i;
-      if (houseToIncrement == updatedCurrentPlayerHouses.length) {
-        currentPlayerStoreCount++;
-      } else if (houseToIncrement >= totalDistributableBuckets) {
-        const mySideHouseToIncrement = houseToIncrement - totalDistributableBuckets;
-        updatedCurrentPlayerHouses[mySideHouseToIncrement]++;
-      } else if (houseToIncrement > updatedCurrentPlayerHouses.length) {
-        const otherSideHouseToIncrement = houseToIncrement - updatedCurrentPlayerHouses.length - 1;
-        updatedOpponentPlayerHouses[otherSideHouseToIncrement]++;
-      } else {
-        updatedCurrentPlayerHouses[houseToIncrement]++;
-      }
-    }
-
-    const newState = generateInitialGameState();
-    newState.currentTurn = opposingPlayer;
-    newState[player] = {
-      houses: updatedCurrentPlayerHouses,
-      storeCount: currentPlayerStoreCount,
-    }
-    newState[opposingPlayer] = {
-      houses: updatedOpponentPlayerHouses,
-      storeCount: opponentPlayerStoreCount,
-    }
-
-    setGameState(newState);
-  }
+  const [gameState, dispatch] = useReducer(reducer, generateInitialGameState());
 
   return (
     <table>
@@ -90,7 +27,11 @@ const GameBoard = () => {
           <House
             piecesCount={count}
             showPlayButton={gameState.currentTurn == 'playerB'}
-            onPlay={() => playHouse(gameState.playerB.houses.length - index - 1, 'playerB')}
+            onPlay={() => dispatch({
+              type: 'PLAY_HOUSE',
+              houseIndex: gameState.playerB.houses.length - index - 1,
+              player: 'playerB',
+            })}
             className={`playerB-house${gameState.playerB.houses.length - index}`}
           />
         ))}
@@ -101,7 +42,11 @@ const GameBoard = () => {
           <House
             piecesCount={count}
             showPlayButton={gameState.currentTurn == 'playerA'}
-            onPlay={() => playHouse(index, 'playerA')}
+            onPlay={() => dispatch({
+              type: 'PLAY_HOUSE',
+              houseIndex: index,
+              player: 'playerA',
+            })}
             className={`playerA-house${index + 1}`}
           />
         ))}
