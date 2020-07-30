@@ -69,6 +69,7 @@ const App = () => {
     </p>
     <div>
       <h3>Game state overrides</h3>
+      {/* TODO: clean these up, very repetitive */}
       <button
         onClick={
           () => dispatch({
