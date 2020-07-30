@@ -12,12 +12,12 @@ describe('playing stones', () => {
     cy.get('.playerA-house6 .count').should('contain', '5');
     cy.get('.playerA-store').should('contain', '0');
 
-    cy.get('.playerA-house1 button').click();
-    cy.get('.playerA-house1 .count').should('contain', '0');
+    cy.get('.playerB-house6 button').click();
+    cy.get('.playerA-house1 .count').should('contain', '5');
     cy.get('.playerA-house2 .count').should('contain', '1');
     cy.get('.playerA-house3 .count').should('contain', '6');
-    cy.get('.playerA-house4 .count').should('contain', '6');
-    cy.get('.playerA-house5 .count').should('contain', '6');
+    cy.get('.playerA-house4 .count').should('contain', '5');
+    cy.get('.playerA-house5 .count').should('contain', '5');
     cy.get('.playerA-house6 .count').should('contain', '5');
     cy.get('.playerA-store').should('contain', '0');
   });
