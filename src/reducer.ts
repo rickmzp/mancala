@@ -115,18 +115,30 @@ const playHouse = (state: GameState, index: number, player: Player) => {
 
     newState.currentTurn = null;
   }
+
   return newState;
 }
 
 // TODO: rethink how to set the type for action
 export const reducer = (state: GameState, action: PlayHouseAction | OverrideGameStateAction): GameState => {
-  // TODO: validate that we always have the right number of stones in play
+  let newState;
   switch (action.type) {
     case 'PLAY_HOUSE':
-      return playHouse(state, action.houseIndex, action.player);
+      newState = playHouse(state, action.houseIndex, action.player);
+      break;
     case 'OVERRIDE_GAME_STATE':
-      return action.newState;
+      newState = action.newState;
+      break;
   }
+
+  if (
+    newState.playerA.houses.reduce((total, count) => total + count) +
+      newState.playerA.storeCount +
+      newState.playerB.houses.reduce((total, count) => total + count) +
+      newState.playerB.storeCount !== 48
+  ) throw new Error('invalid number of pieces in game state');
+
+  return newState;
 }
 
 export default reducer;

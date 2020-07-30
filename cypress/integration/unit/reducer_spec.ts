@@ -1,5 +1,5 @@
 // TODO: can we move this file out of the integration folder?
-import reducer, { generateInitialGameState, GameState } from '../../../src/reducer';
+import reducer, { generateInitialGameState, GameState, InvalidNumberOfGamePiecesError } from '../../../src/reducer';
 
 it("distributes the stones when passing the opposite player's store", () => {
   const initialState = generateInitialGameState();
@@ -22,6 +22,7 @@ it("distributes the stones when passing the opposite player's store", () => {
 
 it('handles large numbers of stones in a house', () => {
   const initialState = generateInitialGameState();
+  initialState.playerB.storeCount = 24;
   initialState.playerB.houses = [0, 0, 0, 0, 0, 0];
   initialState.playerA.houses = [0, 0, 0, 0, 0, 24];
 
@@ -34,11 +35,12 @@ it('handles large numbers of stones in a house', () => {
   expect(newState.playerB.houses).to.deep.equal([2, 2, 2, 2, 2, 2]);
   expect(newState.playerA.houses).to.deep.equal([2, 2, 2, 2, 1, 1]);
   expect(newState.playerA.storeCount).to.equal(2);
-  expect(newState.playerB.storeCount).to.equal(0);
+  expect(newState.playerB.storeCount).to.equal(24);
 });
 
 it("allows capturing of opposing player's stones", () => {
   const initialState = generateInitialGameState();
+  initialState.playerB.storeCount = 46;
   initialState.playerB.houses = [1, 0, 0, 0, 0, 0];
   initialState.playerA.houses = [0, 0, 0, 0, 1, 0];
 
@@ -51,11 +53,12 @@ it("allows capturing of opposing player's stones", () => {
   expect(newState.playerB.houses).to.deep.equal([0, 0, 0, 0, 0, 0]);
   expect(newState.playerA.houses).to.deep.equal([0, 0, 0, 0, 0, 0]);
   expect(newState.playerA.storeCount).to.equal(2);
-  expect(newState.playerB.storeCount).to.equal(0);
+  expect(newState.playerB.storeCount).to.equal(46);
 })
 
 it("allows capturing of opposing player's stones after going around the board", () => {
   const initialState = generateInitialGameState();
+  initialState.playerB.storeCount = 38;
   initialState.playerB.houses = [0, 0, 0, 0, 0, 1];
   initialState.playerA.houses = [0, 0, 0, 1, 0, 8];
 
@@ -68,7 +71,7 @@ it("allows capturing of opposing player's stones after going around the board", 
   expect(newState.playerB.houses).to.deep.equal([1, 1, 1, 1, 1, 0]);
   expect(newState.playerA.houses).to.deep.equal([0, 0, 0, 1, 0, 0]);
   expect(newState.playerA.storeCount).to.equal(4);
-  expect(newState.playerB.storeCount).to.equal(0);
+  expect(newState.playerB.storeCount).to.equal(38);
 })
 
 describe('end of game scenarios', () => {
@@ -173,4 +176,27 @@ describe('end of game scenarios', () => {
       houseIndex: 5
     })
   }
+})
+
+describe('state validation', () => {
+  it('throws an error if there is a wrong number of game pieces', () => {
+    const initialState = generateInitialGameState();
+    expect(() => {
+      reducer(initialState, {
+        type: 'OVERRIDE_GAME_STATE',
+        newState: {
+          currentTurn: 'playerB',
+          playerB: {
+            houses: [0, 0, 0, 0, 0, 1],
+            storeCount: 25,
+          },
+          playerA: {
+            houses: [0, 0, 0, 0, 0, 1],
+            storeCount: 22,
+          },
+          winner: null
+        }
+      })
+    }).to.throw('invalid number of pieces in game state');
+  })
 })
