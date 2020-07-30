@@ -48,27 +48,42 @@ describe('ending the game', () => {
   });
 });
 
-function play({ player, houseNum }) {
+interface PlayAction {
+  player: 'A' | 'B',
+  houseNum: number,
+}
+
+function play({ player, houseNum }: PlayAction) {
   cy.get(
     `.player${player}-house${houseNum} button[data-test-id=playButton]`
   ).click();
 }
 
-function boardStateShouldBe({ A, B }) {
+interface ExpectedPlayerState {
+  houses: Array<number>,
+  store: number,
+}
+
+interface ExpectedPlayersState {
+  A: ExpectedPlayerState,
+  B: ExpectedPlayerState,
+}
+
+function boardStateShouldBe({ A, B }: ExpectedPlayersState) {
   cy.get(`.playerB-store`).should('have.text', B.store);
-  B.houses.forEach((expectedCount, index) => {
+  B.houses.forEach((expectedCount: number, index: number) => {
     const number = 6 - index;
     cy.get(`.playerB-house${number} .count`).should('contain', expectedCount);
   });
 
   cy.get(`.playerA-store`).should('have.text', A.store);
-  A.houses.forEach((expectedCount, index) => {
+  A.houses.forEach((expectedCount: number, index: number) => {
     const number = index + 1;
     cy.get(`.playerA-house${number} .count`).should('contain', expectedCount);
   });
 };
 
-function currentTurnShouldBeForPlayer(player) {
+function currentTurnShouldBeForPlayer(player: 'playerA' | 'playerB') {
   const opposingPlayer = player === 'playerA' ? 'playerB' : player;
   cy.get(`.${player}-house [data-test-id=playButton]`).should('have.length', 6);
   cy.get(`.${opposingPlayer}-house [data-test-id=playButton]`).should('have.length', 0);
