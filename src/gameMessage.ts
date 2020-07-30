@@ -1,6 +1,6 @@
 import { GameState } from "./reducer";
 
-function gameMessageForGameState(gameState: GameState): string {
+function gameMessageForGameState(gameState: Pick<GameState, "winner">): string {
   switch (gameState.winner) {
     case 'playerA':
       return 'Player A wins!';
