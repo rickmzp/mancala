@@ -1,5 +1,5 @@
 // TODO: can we move this file out of the integration folder?
-import reducer, { generateInitialGameState, GameState, InvalidNumberOfGamePiecesError } from '../../../src/reducer';
+import reducer, { generateInitialGameState, GameState } from '../../../src/reducer';
 
 it("distributes the stones when passing the opposite player's store", () => {
   const initialState = generateInitialGameState();
