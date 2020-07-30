@@ -13,20 +13,19 @@ export interface GameState {
 type Player = 'playerA' | 'playerB';
 type HouseIndex = 0 | 1 | 2 | 3 | 4 | 5;
 
-interface GameAction {
-  type: 'PLAY_HOUSE' | 'OVERRIDE_GAME_STATE',
-}
 
-interface PlayHouseAction extends GameAction {
+type PlayHouseAction = {
   type: 'PLAY_HOUSE',
   houseIndex: HouseIndex,
   player: Player
 }
 
-interface OverrideGameStateAction extends GameAction {
+type OverrideGameStateAction = {
   type: 'OVERRIDE_GAME_STATE',
   newState: GameState,
 }
+
+type GameAction = PlayHouseAction | OverrideGameStateAction;
 
 export const generateInitialGameState = (): GameState =>  ({
   currentTurn: 'playerA',
@@ -120,8 +119,7 @@ const playHouse = (state: GameState, index: HouseIndex, player: Player) => {
   return newState;
 }
 
-// TODO: rethink how to set the type for action
-export const reducer = (state: GameState, action: PlayHouseAction | OverrideGameStateAction): GameState => {
+export const reducer = (state: GameState, action: GameAction): GameState => {
   let newState;
   switch (action.type) {
     case 'PLAY_HOUSE':
